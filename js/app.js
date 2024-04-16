@@ -3,7 +3,7 @@ let $ = document;
 let bodyElem = $.body;
 let contextMenu = $.getElementById ("contextMenu"); 
 
-bodyElem.addEventListener ("contextmenu" , (event) => {
+function cont (event) {
     event.preventDefault ();
     if (contextMenu.style.display === "none") {
         saveValuePageX = event.pageX;
@@ -15,7 +15,9 @@ bodyElem.addEventListener ("contextmenu" , (event) => {
         contextMenu.style.left = event.pageX + "px";
         contextMenu.style.top = event.pageY + "px";
     }
-});
+}
+
+bodyElem.addEventListener ("contextmenu" , cont);
 
 bodyElem.addEventListener ("keydown" , (event) => {
     if (event.key === "Escape") {
@@ -23,8 +25,20 @@ bodyElem.addEventListener ("keydown" , (event) => {
     }
 });
 
-bodyElem.addEventListener ("click" , () => {
+function clickOutmenu () {
     if (contextMenu.style.display != "none") {
         contextMenu.style.display = "none";
     }
+}
+
+bodyElem.addEventListener ("click" , clickOutmenu);
+
+contextMenu.addEventListener ("mousemove" , () => {
+    bodyElem.removeEventListener ("contextmenu" , cont);
+    bodyElem.removeEventListener ("click" , clickOutmenu);
 });
+
+contextMenu.addEventListener ("mouseout" , () => {
+    bodyElem.addEventListener ("contextmenu" , cont);
+    bodyElem.addEventListener ("click" , clickOutmenu);
+})
